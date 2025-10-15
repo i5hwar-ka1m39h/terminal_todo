@@ -39,7 +39,7 @@ func main() {
 	checkError(err)
 	defer file.Close()
 
-	todoString := "id_2, water the plants, false, 3 pm, 2hr, medium"
+	todoString := "id_2, water the plants, false, 3 pm, 2hr, medium\n"
 	_, err = file.WriteString(todoString)
 
 	fileData, err := os.ReadFile(filePlace)
