@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"encoding/csv"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -26,18 +27,14 @@ func AddTodo(todo, priority, timeRequired string) string {
 	create_at := t.Format("Monday, January 2, 2006 at 3:04 PM")
 	status := "inProgress"
 
-	entryString := fmt.Sprintf(
-		"%s, %s, %s, %s, %s, %s \n",
-		id.String(),
-		todo,
-		status,
-		create_at,
-		timeRequired,
-		priority,
-	)
-	_, err = file.WriteString(entryString)
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
 
-	return entryString
+	dataToAdd := []string{id.String(), todo, status, create_at, timeRequired, priority}
+
+	writer.Write(dataToAdd)
+
+	return id.String()
 }
 
 var addTodocmd = &cobra.Command{
@@ -48,7 +45,7 @@ var addTodocmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 3 {
 			res := AddTodo(args[0], args[1], args[2])
-			fmt.Println(res)
+			fmt.Printf("id : %s\n", res)
 		} else {
 			fmt.Println("please provide three arguments title, priority, time required")
 		}

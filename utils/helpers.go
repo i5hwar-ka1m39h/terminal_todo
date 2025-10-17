@@ -1,8 +1,13 @@
 package utils
 
 import (
+	"encoding/csv"
 	"os"
 	"path/filepath"
+
+	"github.com/fatih/color"
+	"github.com/olekukonko/tablewriter"
+	"github.com/olekukonko/tablewriter/renderer"
 )
 
 func CheckError(e error) {
@@ -42,8 +47,39 @@ func Initiate() {
 
 		defer file.Close()
 
-		_, err = file.WriteString("id, task, status, created_at, time_limit, priority\n")
+		writer := csv.NewWriter(file)
+		defer writer.Flush()
+		header := []string{"id", "title", "status", "created_at", "time_limit", "priority"}
+		err = writer.Write(header)
 		CheckError(err)
 
 	}
+}
+
+func Tabelize(data [][]string) {
+	if len(data) == 0 {
+		color.Red("No records found")
+		return
+	}
+
+	colorCfg := renderer.ColorizedConfig{
+		Header: renderer.Tint{
+			FG: renderer.Colors{color.FgCyan, color.Bold},
+		},
+		Column: renderer.Tint{
+			FG: renderer.Colors{color.FgGreen},
+		},
+	}
+	table := tablewriter.NewTable(
+		os.Stdout,
+		tablewriter.WithRenderer(renderer.NewColorized(colorCfg)),
+	)
+
+	header := data[0]
+
+	table.Header(header)
+
+	table.Bulk(data[1:])
+
+	table.Render()
 }
