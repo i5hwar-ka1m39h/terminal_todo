@@ -67,7 +67,7 @@ func Tabelize(data [][]string) {
 			FG: renderer.Colors{color.FgCyan, color.Bold},
 		},
 		Column: renderer.Tint{
-			FG: renderer.Colors{color.FgGreen},
+			FG: renderer.Colors{color.FgWhite},
 		},
 	}
 	table := tablewriter.NewTable(
