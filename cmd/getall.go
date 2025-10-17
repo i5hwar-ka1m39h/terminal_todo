@@ -1,8 +1,7 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/i5hwar-ka1m39h/terminal_todo/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -11,7 +10,8 @@ var getAllcmd = &cobra.Command{
 	Short: "get all todo",
 	Long:  "get all the todo",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("%s", GetAll())
+		res := GetAll()
+		utils.Tabelize(res)
 	},
 }
 
