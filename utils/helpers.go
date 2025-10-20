@@ -1,9 +1,7 @@
 package utils
 
 import (
-	"encoding/csv"
 	"os"
-	"path/filepath"
 
 	"github.com/fatih/color"
 	"github.com/olekukonko/tablewriter"
@@ -30,31 +28,6 @@ func CheckError(e error) {
 //		}
 //		return false
 //	}
-func Initiate() {
-	homeDir, err := os.UserHomeDir()
-	CheckError(err)
-
-	dataDir := filepath.Join(homeDir, ".local", "share", "todoer")
-
-	err = os.MkdirAll(dataDir, 0o755)
-	CheckError(err)
-
-	// check if csv exist if not then create else exit
-	csvPath := filepath.Join(dataDir, "todos.csv")
-	if _, err := os.Stat(csvPath); os.IsNotExist(err) {
-		file, err := os.Create(csvPath)
-		CheckError(err)
-
-		defer file.Close()
-
-		writer := csv.NewWriter(file)
-		defer writer.Flush()
-		header := []string{"id", "title", "status", "created_at", "time_limit", "priority"}
-		err = writer.Write(header)
-		CheckError(err)
-
-	}
-}
 
 func Tabelize(data [][]string) {
 	if len(data) == 0 {
