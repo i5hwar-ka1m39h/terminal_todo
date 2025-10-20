@@ -13,7 +13,7 @@ import (
 )
 
 func AddTodo(todo, priority, timeRequired string) string {
-	utils.Initiate()
+	Initiate()
 	homeDir, err := os.UserHomeDir()
 	utils.CheckError(err)
 	csvPath := filepath.Join(homeDir, ".local", "share", "todoer", "todos.csv")
@@ -41,17 +41,20 @@ var addTodocmd = &cobra.Command{
 	Use:   "add",
 	Short: "Adds todo",
 	Long:  "Adds todo with priority and time required",
-	Args:  cobra.ExactArgs(3),
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 3 {
-			res := AddTodo(args[0], args[1], args[2])
-			fmt.Printf("id : %s\n", res)
-		} else {
-			fmt.Println("please provide three arguments title, priority, time required")
-		}
+		title, _ := cmd.Flags().GetString("title")
+		priority, _ := cmd.Flags().GetString("priority")
+		hours, _ := cmd.Flags().GetInt("hours")
+
+		res := AddTodo(title, priority, fmt.Sprintf("%d", hours))
+		fmt.Printf("id : %s\n", res)
 	},
 }
 
 func init() {
+	addTodocmd.Flags().StringP("title", "t", "", "title of the todo")
+	addTodocmd.Flags().StringP("priority", "p", "", "priority of the todo")
+	addTodocmd.Flags().IntP("hours", "o", 0, "hours needed to complete the todo")
 	rootCommand.AddCommand(addTodocmd)
+	addTodocmd.MarkFlagRequired("title")
 }
